@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amazon Alexa Sentiment Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        textarea {
+            width: 90%;
+            height: 120px;
+            padding: 10px;
+            margin: 15px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Amazon Alexa Sentiment Analysis</h1>
+
+    <p>Enter your product review below:</p>
+
+    <textarea id="review"
+        placeholder="Write your review here..."></textarea>
+
+    <br>
+
+    <button onclick="predictSentiment()">Predict Sentiment</button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+async function predictSentiment() {
+
+    const text = document.getElementById("review").value;
+
+    if (!text.trim()) {
+        alert("Please enter a review!");
+        return;
+    }
+
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({text: text})
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result").innerText =
+        data.sentiment
+        ? "Sentiment: " + data.sentiment
+        : "Error: " + data.error;
+}
+</script>
+
+</body>
+</html>
